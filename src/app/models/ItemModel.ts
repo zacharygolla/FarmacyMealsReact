@@ -1,5 +1,5 @@
 export interface ItemModel {
-    foodId: string;
+    itmType: string;
     name: string;
     price: number;
     imagePath: string;

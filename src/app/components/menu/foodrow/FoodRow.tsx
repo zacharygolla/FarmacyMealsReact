@@ -1,12 +1,12 @@
 import { Grid } from "@mui/material";
-import { Food } from "../../../models/Food";
+import { FoodModel } from "../../../models/FoodModel";
 import FoodCard from "../foodCard/FoodCard";
 import FoodRowHeader from "../foodRowHeader/FoodRowHeader";
 
 
 interface Props {
     category: string;
-    categoryFoods: Food[];
+    categoryFoods: FoodModel[];
 }
 
 const FoodRow: React.FC<Props> = ({ category, categoryFoods }) => {

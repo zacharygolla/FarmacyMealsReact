@@ -30,7 +30,6 @@ const FoodCard: React.FC<Props> = ({ food }) => {
       iconPath: food.iconPath,
       quantity: 1,
       itmType: 'food',
-      itemId: ""
     })); // Replace 'UPDATE_DATA' with your actual action type
   };
 

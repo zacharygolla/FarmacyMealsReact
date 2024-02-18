@@ -6,8 +6,4 @@ export interface FoodModel {
     description: string;
     imagePath: string;
     iconPath: string;
-  }
-
-  export interface MenuState {
-    menuData: { [category: string]: FoodModel[] };
-  }
+  };

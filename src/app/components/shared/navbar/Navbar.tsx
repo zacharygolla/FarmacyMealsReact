@@ -8,6 +8,7 @@ const leftLinks = [
 
 const rightLinks = [
     { title: 'Login', path: '/login' },
+    { title: 'Register', path: '/register' }
 ]
 
 const navStyles = {
@@ -29,18 +30,18 @@ const Navbar: React.FC = () => {
                         </List>
                     </Box>
                     <Box display='flex' alignItems='center'>
+                        <IconButton size="large" edge='start' color='inherit' sx={{ mr: 2 }}>
+                            <Badge badgeContent='4' color='secondary' component={NavLink} to='/cart' sx={{ ...navStyles, textDecoration: 'none' }}>
+                                <ShoppingCart />
+                            </Badge>
+                        </IconButton>
                         <List sx={{ display: 'flex' }}>
                             {rightLinks.map((({ title, path }) => (
                                 <ListItem component={NavLink} to={path} key={path} sx={{ ...navStyles, typography: 'h6' }}>
                                     {title.toUpperCase()}
                                 </ListItem>
                             )))}
-                        </List>
-                        <IconButton size="large" edge='start' color='inherit' sx={{ mr: 2 }}>
-                            <Badge badgeContent='4' color='secondary' component={NavLink} to='/cart' sx={{ ...navStyles, textDecoration: 'none' }}>
-                                <ShoppingCart />
-                            </Badge>
-                        </IconButton>
+                        </List>                        
                     </Box>
                 </Toolbar>
             </AppBar>

@@ -14,15 +14,12 @@ const App: React.FC = () => {
     // Function to fetch data when the component mounts
     const fetchDataOnLoad = async () => {
       try {
-        // Call your data service to fetch the data
         fetchMenuData().pipe(map(response => {
-          return response.data.reduce((acc: { [x: string]: any[]; }, food: { category: string; }) => {
-            const { category } = food;
-            // If the category is not in the dictionary, add it with an empty array
-            if (!acc[category]) 
-              acc[category] = [];        
-            // Push the current food object to the corresponding category array
-            acc[category].push(food);
+          return response.data.reduce((acc: { [x: string]: any; }, food: { foodId: string; }) => {
+            const { foodId } = food;
+            if (!acc[foodId]) 
+              acc[foodId] = null;        
+            acc[foodId] = food;
             return acc;
           }, {});
         })).subscribe((response) => {

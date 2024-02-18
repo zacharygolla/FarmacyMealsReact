@@ -1,5 +1,5 @@
 // menuService.js
-import { get } from './apiClient'; // assuming your API client file is named apiClient.js
+import { get } from './ApiClient'; // assuming your API client file is named apiClient.js
 
 // Define the endpoint for fetching menu data
 const MENU_ENDPOINT = '/Foods';

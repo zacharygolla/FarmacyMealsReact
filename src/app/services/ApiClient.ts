@@ -31,3 +31,20 @@ export const get = <T>(endpoint: string, config?: AxiosRequestConfig): Observabl
         });
     });
   };
+
+  export const post = <T>(endpoint: string, data: any, config?: AxiosRequestConfig): Observable<ApiResponse<T>> => {
+    return new Observable((observer) => {
+      api.post<T>(endpoint, data, config)
+        .then((response: AxiosResponse<T>) => {
+          observer.next({
+            data: response.data,
+            status: response.status,
+            // ... other fields as needed
+          });
+          observer.complete();
+        })
+        .catch((error) => {
+          observer.error(error);
+        });
+    });
+  };

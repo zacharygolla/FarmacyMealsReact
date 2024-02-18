@@ -1,5 +1,3 @@
-// actions/menuActions.js
-
 // Action type constant
 export const SET_MENU_DATA = 'menu/setMenuData';
 
