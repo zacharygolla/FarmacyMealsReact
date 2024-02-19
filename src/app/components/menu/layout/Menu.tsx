@@ -20,7 +20,7 @@ const Menu: React.FC = () => {
       }
       return acc;
     },{} as { [foodId: string]: FoodModel[] }));
-  });
+  }, []);
 
   if (!menuByCat) {
     return <div>Loading...</div>; // or any loading indicator

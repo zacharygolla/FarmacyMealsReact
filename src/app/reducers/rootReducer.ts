@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux';
-import authReducer from './authReducer';
+import userReducer from './userReducer';
 import cartReducer from './cartReducer';
 import menuReducer from './menuReducer';
 
@@ -7,7 +7,7 @@ import menuReducer from './menuReducer';
 const rootReducer = combineReducers({
   menu: menuReducer,
   cart: cartReducer,
-  auth: authReducer
+  user: userReducer
 });
 
 export default rootReducer;

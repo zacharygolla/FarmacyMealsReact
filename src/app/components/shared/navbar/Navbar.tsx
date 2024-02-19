@@ -1,6 +1,9 @@
 import { ShoppingCart } from "@mui/icons-material";
 import { AppBar, Badge, Box, IconButton, List, ListItem, Toolbar, Typography } from "@mui/material"
+import { useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
+import { isLoggedIn } from "../../../selectors/Selectors";
+import SignedInMenu from "../dropdownMenu/SignedInMenu";
 
 const leftLinks = [
     { title: 'Menu', path: '/menu' }
@@ -16,6 +19,8 @@ const navStyles = {
 }
 
 const Navbar: React.FC = () => {
+    const loggedIn = useSelector(isLoggedIn);
+
     return (
         <>
             <AppBar position="static" sx={{ mb: 4 }}>
@@ -35,13 +40,22 @@ const Navbar: React.FC = () => {
                                 <ShoppingCart />
                             </Badge>
                         </IconButton>
-                        <List sx={{ display: 'flex' }}>
-                            {rightLinks.map((({ title, path }) => (
-                                <ListItem component={NavLink} to={path} key={path} sx={{ ...navStyles, typography: 'h6' }}>
-                                    {title.toUpperCase()}
-                                </ListItem>
-                            )))}
-                        </List>                        
+                        {loggedIn ? (
+                            <>
+                                <SignedInMenu/>
+                            </>
+                        ) : (
+                            <>
+                                <List sx={{ display: 'flex' }}>
+                                    {rightLinks.map((({ title, path }) => (
+                                        <ListItem component={NavLink} to={path} key={path} sx={{ ...navStyles, typography: 'h6' }}>
+                                            {title.toUpperCase()}
+                                        </ListItem>
+                                    )))}
+                    
+                                </List>  
+                            </>
+                        )}                                              
                     </Box>
                 </Toolbar>
             </AppBar>

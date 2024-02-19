@@ -2,7 +2,7 @@ import { UPDATE_CART_SINGLE_FOOD } from "../actions/cartActions";
 
 // Initial state
 const initialState = {
-  cartData: {}, // Initial state for menu data
+  cartData: [], // Initial state for menu data
 };
 
 // Reducer function

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
@@ -13,38 +13,37 @@ import Container from '@mui/material/Container';
 import { Paper } from '@mui/material';
 import { accountLogin } from '../../services/AuthService';
 import { useDispatch } from 'react-redux';
-import { setAuthToken } from '../../actions/authActions';
+import { setUserAndAuthToken } from '../../actions/userActions';
+import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
+import { Navigate } from 'react-router-dom';
 
 const Login: React.FC = () => {
     const dispatch = useDispatch();
+    const {register, handleSubmit, formState: { errors }, clearErrors} = useForm()
+    const [loggedIn, setLoggedIn] = useState(false);
 
-    const[credentials, setCredentials] = useState({
-        email: '',
-        password: ''
-    })
-
-    const handleCredentialChange = (event: any) => {
-        const {name, value} = event.target;
-        setCredentials({...credentials, [name]: value});
-    }
-
-    const handleCredentialSubmit = (event: any) => {
-        console.log('test')
-        event.preventDefault();
-        const loginSubmit = async () => {
+    const handleTyping = () => {
+        clearErrors('email');
+        clearErrors('password');
+    };   
+    
+    const submitForm: SubmitHandler<FieldValues> = async (data) => {
+        const loginSubmit = () => {
             try {
-                accountLogin(credentials)
+                accountLogin(data)
                     .subscribe(response => {
-                        dispatch(setAuthToken(response.data.token));
-                })                
+                        dispatch(setUserAndAuthToken(response.data.email, response.data.token));
+                        setLoggedIn(true)
+                    })                
             } catch (error) {
                 console.error('Error logging in.', error)
             }
         }
         loginSubmit();
-    }
+    };    
 
     return (
+      <>
         <Container component={Paper} maxWidth="xs" sx={{display: 'flex', flexDirection: 'column', alignItems: 'center', padding: 4}}>        
           <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
             <LockOutlinedIcon />
@@ -52,29 +51,32 @@ const Login: React.FC = () => {
           <Typography component="h1" variant="h5">
             Sign in
           </Typography>
-          <Box component="form" noValidate sx={{ mt: 1 }} onSubmit={handleCredentialSubmit}>
+          <Box component="form" noValidate sx={{ mt: 1 }} onSubmit={handleSubmit(submitForm)}>
             <TextField
               margin="normal"
               required
               fullWidth
               id="email"
               label="Email Address"
-              name="email"
               autoComplete="email"
-              autoFocus
-              onChange={handleCredentialChange}
-              value={credentials.email}
+              autoFocus    
+              {...register('email', { required: 'Email is required', pattern: { value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+                message: 'Invalid email format' }})}
+                error={!!errors.email }
+                helperText={(errors?.email?.message ?? '') as string}
+                onChange={handleTyping}
             />
             <TextField
               margin="normal"
               required
-              fullWidth
-              name="password"
+              fullWidth              
               label="Password"
               type="password"
               id="password"
-              onChange={handleCredentialChange}
-              value={credentials.password}
+              {...register('password', {required: 'Password is required'})}
+              error={!!errors.password}
+              helperText={(errors?.password?.message ?? '') as string}
+              onChange={handleTyping}
             />
             <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
@@ -101,7 +103,9 @@ const Login: React.FC = () => {
                 </Link>
               </Grid>
             </Grid>
+            {loggedIn && <Navigate to="/" />}
         </Container>
+      </>
     );
 }
 export default Login;
