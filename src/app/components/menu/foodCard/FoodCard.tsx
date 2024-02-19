@@ -1,8 +1,8 @@
 import { Button, Card, CardActions, CardContent, CardMedia, Typography } from "@mui/material";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { updateCartData } from "../../../actions/cartActions";
 import { FoodModel } from "../../../models/FoodModel";
+import { setCartData } from "../../../slices/cartSlice";
 import FoodModal from "../foodModal/foodModal";
 
 interface Props {
@@ -23,7 +23,7 @@ const FoodCard: React.FC<Props> = ({ food }) => {
 
   const handleCartUpdate = () => {  
     // Dispatch an action to update the data in your store
-    dispatch(updateCartData({
+    dispatch(setCartData({
       name: food.name,
       price: food.price,
       imagePath: food.imagePath,

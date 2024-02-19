@@ -13,7 +13,6 @@ import Container from '@mui/material/Container';
 import { Paper } from '@mui/material';
 import { accountLogin } from '../../services/AuthService';
 import { useDispatch } from 'react-redux';
-import { setUserAndAuthToken } from '../../actions/userActions';
 import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
 import { Navigate } from 'react-router-dom';
 import { setUserData } from '../../slices/userSlice';
