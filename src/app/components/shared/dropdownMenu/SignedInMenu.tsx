@@ -5,7 +5,7 @@ import MenuItem from '@mui/material/MenuItem';
 import Fade from '@mui/material/Fade';
 import { useDispatch, useSelector } from 'react-redux';
 import { UserEmail } from '../../../selectors/Selectors';
-import { setUserAndAuthToken } from '../../../actions/userActions';
+import { setUserData } from '../../../slices/userSlice';
 
 const SignedInMenu: React.FC = () => {
   const dispatch = useDispatch();
@@ -21,7 +21,7 @@ const SignedInMenu: React.FC = () => {
   };
 
   const handleSignOut = () => {
-    dispatch(setUserAndAuthToken('', ''))
+    dispatch(setUserData({ email: '', token: '' }))
   }
 
   return (

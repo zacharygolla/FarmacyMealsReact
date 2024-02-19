@@ -5,18 +5,18 @@ export interface UserState {
   token: string;
 }
 
-const initialState = {
-    token: '',
-    email: '' // Initial state for auth data
-  };
+const initialState: UserState = {
+  token: '',
+  email: '' // Initial state for auth data
+};
 
 const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
     setUserData(state, action: PayloadAction<{ token: string, email: string }>) {
-      state.token = action.payload.token,
-      state.email = action.payload.email
+      state.token = action.payload.token;
+      state.email = action.payload.email;
     },
   },
 });
