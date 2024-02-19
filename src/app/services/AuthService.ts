@@ -12,8 +12,8 @@ export const accountLogin = (credentials: FieldValues) => {
     return post<any>(LOGIN_ENDPOINT, credentials);
 };
 
-export const accountRegister = () => {
-    return post<any>(REGISTER_ENDPOINT, {});
+export const accountRegister = (registrationData: FieldValues) => {
+    return post<any>(REGISTER_ENDPOINT, registrationData);
 }
 
 export const getCurrentUser = () => {

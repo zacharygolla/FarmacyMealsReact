@@ -7,3 +7,7 @@ export const isLoggedIn = (state: RootState): boolean => {
 export const UserEmail = (state: RootState): string => {
     return state.user.email;
 }
+
+export const UserFirstName = (state: RootState): string => {
+  return state.user.firstName;
+}

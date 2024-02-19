@@ -4,12 +4,12 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Fade from '@mui/material/Fade';
 import { useDispatch, useSelector } from 'react-redux';
-import { UserEmail } from '../../../selectors/Selectors';
+import { UserFirstName } from '../../../selectors/Selectors';
 import { setUserData } from '../../../slices/userSlice';
 
 const SignedInMenu: React.FC = () => {
   const dispatch = useDispatch();
-  const email = useSelector(UserEmail);
+  const firstName = useSelector(UserFirstName);
   const [anchorEl, setAnchorEl] = React.useState(null);
 
   const open = Boolean(anchorEl);
@@ -21,13 +21,13 @@ const SignedInMenu: React.FC = () => {
   };
 
   const handleSignOut = () => {
-    dispatch(setUserData({ email: '', token: '' }))
+    dispatch(setUserData({ firstName: '', email: '', token: '' }))
   }
 
   return (
     <>
       <Button color='inherit' onClick={handleClick} sx={{typography: 'h6'}}>
-        {email}
+        Hello, {firstName}
       </Button>
       <Menu
         anchorEl={anchorEl}

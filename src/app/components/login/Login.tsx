@@ -32,7 +32,7 @@ const Login: React.FC = () => {
             try {
                 accountLogin(data)
                     .subscribe(response => {
-                        dispatch(setUserData({ email: response.data.email, token: response.data.token }));
+                        dispatch(setUserData({ firstName: response.data.firstName, email: response.data.email, token: response.data.token }));
                         setLoggedIn(true)
                     })                
             } catch (error) {
@@ -76,7 +76,7 @@ const Login: React.FC = () => {
               {...register('password', {required: 'Password is required'})}
               error={!!errors.password}
               helperText={(errors?.password?.message ?? '') as string}
-              onChange={handleTyping}
+              onChange={handleTyping}                          
             />
             <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
@@ -98,7 +98,7 @@ const Login: React.FC = () => {
                 </Link>
               </Grid>
               <Grid item>
-                <Link href="#" variant="body2">
+                <Link href="/register" variant="body2">
                   {"Don't have an account? Sign Up"}
                 </Link>
               </Grid>
