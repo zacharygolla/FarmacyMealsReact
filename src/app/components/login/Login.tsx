@@ -22,9 +22,8 @@ const Login: React.FC = () => {
     const {register, handleSubmit, formState: { errors }, clearErrors} = useForm()
     const [loggedIn, setLoggedIn] = useState(false);
 
-    const handleTyping = () => {
-        clearErrors('email');
-        clearErrors('password');
+    const handleTyping = (id: string) => {
+        clearErrors(id);        
     };   
     
     const submitForm: SubmitHandler<FieldValues> = async (data) => {
@@ -64,7 +63,7 @@ const Login: React.FC = () => {
                 message: 'Invalid email format' }})}
                 error={!!errors.email }
                 helperText={(errors?.email?.message ?? '') as string}
-                onChange={handleTyping}
+                onChange={() => {if(errors) {handleTyping('email')}}}
             />
             <TextField
               margin="normal"
@@ -76,7 +75,7 @@ const Login: React.FC = () => {
               {...register('password', {required: 'Password is required'})}
               error={!!errors.password}
               helperText={(errors?.password?.message ?? '') as string}
-              onChange={handleTyping}                          
+              onChange={() => {if(errors) {handleTyping('password')}}}                          
             />
             <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}

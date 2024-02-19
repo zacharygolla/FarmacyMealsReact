@@ -9,7 +9,7 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
-import { accountLogin, accountRegister } from '../../services/AuthService';
+import { accountRegister } from '../../services/AuthService';
 import { setUserData } from '../../slices/userSlice';
 import { useDispatch } from 'react-redux';
 import { useState } from 'react';
@@ -20,12 +20,9 @@ const Register: React.FC = () => {
   const {register, handleSubmit, formState: { errors }, clearErrors} = useForm()
   const [registered, setRegistered] = useState(false);
 
-  const handleTyping = () => {
-    clearErrors('firstName');
-    clearErrors('lastName');
-    clearErrors('email');
-    clearErrors('password');
-  };  
+  const handleTyping = (id: string) => {
+    clearErrors(id);        
+  };     
 
   const submitForm: SubmitHandler<FieldValues> = async (data) => {
     const registerSubmit = () => {
@@ -62,7 +59,7 @@ const Register: React.FC = () => {
                     message: 'A-Z' }})}
                     error={!!errors.firstName }
                     helperText={(errors?.firstName?.message ?? '') as string}
-                    onChange={handleTyping}
+                    onChange={() => {if(errors) {handleTyping('firstName')}}}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -76,7 +73,7 @@ const Register: React.FC = () => {
                     message: 'Last name must be letters only' }})}
                     error={!!errors.lastName }
                     helperText={(errors?.lastName?.message ?? '') as string}
-                    onChange={handleTyping}
+                    onChange={() => {if(errors) {handleTyping('lastName')}}}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -90,7 +87,7 @@ const Register: React.FC = () => {
                     message: 'Invalid email format' }})}
                     error={!!errors.email }
                     helperText={(errors?.email?.message ?? '') as string}
-                    onChange={handleTyping}
+                    onChange={() => {if(errors) {handleTyping('email')}}}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -104,7 +101,7 @@ const Register: React.FC = () => {
                   {...register('password', {required: 'Password is required'})}
                     error={!!errors.password}
                     helperText={(errors?.password?.message ?? '') as string}
-                    onChange={handleTyping}
+                    onChange={() => {if(errors) {handleTyping('password')}}}
                 />
               </Grid>
               <Grid item xs={12}>
