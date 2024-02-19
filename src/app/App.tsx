@@ -3,9 +3,9 @@ import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { Outlet } from 'react-router-dom';
 import { map } from 'rxjs';
-import { setMenuData } from './actions/menuActions';
 import Navbar from './components/shared/navbar/Navbar';
 import { fetchMenuData } from './services/MenuService';
+import { setMenuData } from './slices/menuSlice';
 
 const App: React.FC = () => {
   const dispatch = useDispatch();
