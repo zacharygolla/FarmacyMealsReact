@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { FoodModel } from '../../../models/FoodModel';
-import { RootState } from '../../../models/RootState';
+import { RootState } from '../../../slices/rootSlice';
 import FoodRow from '../foodrow/FoodRow';
 import MenuHeader from '../menuHeader/MenuHeader';
 import './Menu.css'

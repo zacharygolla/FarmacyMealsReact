@@ -6,6 +6,7 @@ import Fade from '@mui/material/Fade';
 import { useDispatch, useSelector } from 'react-redux';
 import { UserFirstName } from '../../../selectors/Selectors';
 import { setUserData } from '../../../slices/userSlice';
+import { Link } from 'react-router-dom';
 
 const SignedInMenu: React.FC = () => {
   const dispatch = useDispatch();
@@ -35,8 +36,8 @@ const SignedInMenu: React.FC = () => {
         onClose={handleClose}
         TransitionComponent={Fade}
       >
-        <MenuItem onClick={handleClose}>Profile</MenuItem>
-        <MenuItem onClick={handleClose}>Orders</MenuItem>
+        <MenuItem component={Link} to="/profile" onClick={handleClose}>Profile</MenuItem>
+        <MenuItem component={Link} to="/orders" onClick={handleClose}>Orders</MenuItem>
         <MenuItem onClick={handleSignOut}>Logout</MenuItem>
       </Menu>
     </>
