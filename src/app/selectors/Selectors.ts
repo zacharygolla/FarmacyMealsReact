@@ -1,4 +1,4 @@
-import { RootState } from "../models/RootState";
+import { RootState } from "../slices/rootSlice";
 
 export const isLoggedIn = (state: RootState): boolean => {
   return !!state.user.email && !!state.user.token;

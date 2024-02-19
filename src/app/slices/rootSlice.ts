@@ -9,7 +9,7 @@ export interface RootState {
   cart: CartState;
 }
 
-const rootReducer = combineReducers({
+export const rootReducer = combineReducers({
   menu: menuReducer,
   cart: cartReducer,
   user: userReducer
