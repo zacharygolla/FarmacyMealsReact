@@ -10,14 +10,18 @@ import { router } from './app/router/Routes';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import { persistor, store } from './app/store/configureStore';
+import { ThemeProvider } from '@mui/material';
+import theme from './app/theme/theme';
 
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <Provider store={store}>
-      <PersistGate loading={null} persistor={persistor}>
-        <RouterProvider router={router}/>
-      </PersistGate>    
-    </Provider>
+    <ThemeProvider theme={theme}>
+      <Provider store={store}>
+        <PersistGate loading={null} persistor={persistor}>
+          <RouterProvider router={router}/>
+        </PersistGate>    
+      </Provider>
+    </ThemeProvider>
   </React.StrictMode>,
 )

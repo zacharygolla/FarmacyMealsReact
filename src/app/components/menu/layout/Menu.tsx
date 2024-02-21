@@ -1,10 +1,10 @@
+import { Box } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { FoodModel } from '../../../models/FoodModel';
 import { RootState } from '../../../slices/rootSlice';
 import FoodRow from '../foodrow/FoodRow';
 import MenuHeader from '../menuHeader/MenuHeader';
-import './Menu.css'
 
 const Menu: React.FC = () => {
   const menu = useSelector((state: RootState) => state.menu.menu);
@@ -28,12 +28,12 @@ const Menu: React.FC = () => {
   
   return (
       <>
-        <div>
+        <Box sx={{ maxWidth: '1280px', margin: '0 auto', padding: '.5rem' }}>
           <MenuHeader/>      
           {Object.entries(menuByCat).map(([category, categoryFoods]) => (
-            <FoodRow key={category} category={category} categoryFoods={categoryFoods} />
+            <FoodRow key={category} category={category} categoryFoods={categoryFoods}/>
           ))}
-        </div>
+        </Box>
       </>
   );
 }

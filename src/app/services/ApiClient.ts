@@ -1,13 +1,13 @@
-import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
-import { Observable } from 'rxjs';
+import axios, { AxiosRequestConfig } from 'axios';
 
 const BASE_URL = 'https://localhost:5001/api';
 
 export interface ApiResponse<T = any> {
-    data: T;
-    status: number;
-    // ... other fields as needed
-  }
+  data?: T;
+  status?: number;
+  error?: unknown;
+  // ... other fields as needed
+}
 
 // Create a reusable Axios instance with a base URL
 const api = axios.create({
@@ -15,36 +15,27 @@ const api = axios.create({
 });
 
 // Example function to make a GET request
-export const get = <T>(endpoint: string, config?: AxiosRequestConfig): Observable<ApiResponse<T>> => {
-    return new Observable((observer) => {
-      api.get<T>(endpoint, config)
-        .then((response: AxiosResponse<T>) => {
-          observer.next({
-            data: response.data,
-            status: response.status,
-            // ... other fields as needed
-          });
-          observer.complete();
-        })
-        .catch((error) => {
-          observer.error(error);
-        });
-    });
-  };
+export const get = async <T>(endpoint: string, config?: AxiosRequestConfig): Promise<ApiResponse<T>> => {
+  try {
+    const response = await api.get<T>(endpoint, config);
+    return {
+      data: response.data,
+      status: response.status,
+    };
+  }
+  catch (error: any) {
+    throw error;
+  }
+};
 
-  export const post = <T>(endpoint: string, data: any, config?: AxiosRequestConfig): Observable<ApiResponse<T>> => {
-    return new Observable((observer) => {
-      api.post<T>(endpoint, data, config)
-        .then((response: AxiosResponse<T>) => {
-          observer.next({
-            data: response.data,
-            status: response.status,
-            // ... other fields as needed
-          });
-          observer.complete();
-        })
-        .catch((error) => {
-          observer.error(error);
-        });
-    });
-  };
+export const post = async <T>(endpoint: string, data: any, config?: AxiosRequestConfig): Promise<ApiResponse<T>> => {
+  try {
+    const response = await api.post<T>(endpoint, data, config);
+    return {
+      data: response.data,
+      status: response.status,
+    };
+  } catch (error: any) {
+    throw error;
+  }
+};

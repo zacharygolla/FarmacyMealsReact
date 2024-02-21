@@ -9,15 +9,15 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
-import { accountRegister } from '../../services/AuthService';
 import { setUserData } from '../../slices/userSlice';
 import { useDispatch } from 'react-redux';
 import { useState } from 'react';
 import { Navigate } from 'react-router-dom';
+import { accountRegister } from '../../services/AuthService';
 
 const Register: React.FC = () => {
   const dispatch = useDispatch();
-  const {register, handleSubmit, formState: { errors }, clearErrors} = useForm()
+  const {register, handleSubmit, formState: { errors }, clearErrors, setError} = useForm()
   const [registered, setRegistered] = useState(false);
 
   const handleTyping = (id: string) => {
@@ -26,15 +26,29 @@ const Register: React.FC = () => {
 
   const submitForm: SubmitHandler<FieldValues> = async (data) => {
     const registerSubmit = () => {
-        try {
             accountRegister(data)
-                .subscribe(response => {
-                    dispatch(setUserData({ firstName: response.data.firstName, email: response.data.email, token: response.data.token }));
+                .subscribe({
+                  next: response => {
+                    dispatch(
+                      setUserData({ 
+                        firstName: response.data.firstName, 
+                        email: response.data.email, 
+                        token: response.data.token 
+                      }));
                     setRegistered(true);
-                })                              
-        } catch (error) {
-            console.error('Error logging in.', error)
-        }
+                  },
+                  error: error => {
+                    if (error.response && error.response.data.errors.DuplicateEmail) {
+                      // Display error message in the email field
+                      setError('email', {
+                        type: 'manual',
+                        message: 'Email already exists.',
+                      });
+                    } else {
+                      console.error('Error logging in:', error);
+                    }
+                  }
+                  })                                
     }
     registerSubmit();
   };    
@@ -42,8 +56,12 @@ const Register: React.FC = () => {
   return (
     <>
       <Container component="main" maxWidth="xs">
-          <Typography component="h1" variant="h5">
-            Sign up
+        <Box alignItems="center">
+          <Typography variant="h6" textAlign="center" sx={{ fontWeight: 'bold', paddingBottom: '4px', '@media (min-width: 768px)': { paddingBottom: '7px' } }} tabIndex={-1}>
+            Create an account
+          </Typography>
+          <Typography variant="body1" sx={{ display: 'flex', textAlign: 'center', fontSize: '0.9rem', color: 'rgba(0, 0, 0, 0.54)', paddingLeft: '8px', paddingRight: '8px' }}>
+            Join Farmacy Meals to get access to track current orders and see previous ones, get access to special discounts and offers, and receive updates on the latest news and updates to our menus.            
           </Typography>
           <Box component="form" noValidate  sx={{ mt: 3 }} onSubmit={handleSubmit(submitForm)}>
             <Grid container spacing={2}>
@@ -51,15 +69,15 @@ const Register: React.FC = () => {
                 <TextField
                   autoComplete="given-name"
                   required
-                  fullWidth
+                  fullWidth                  
                   id="firstName"
                   label="First Name"
-                  autoFocus
-                  {...register('firstName', { required: 'First name is required', pattern: { value: /^[a-zA-Z]/,
-                    message: 'A-Z' }})}
+                  InputLabelProps={{
+                    sx: { "&.Mui-focused": { color: "inherit" } },
+                  }}
+                  {...register('firstName', { required: 'First name is required' })}
                     error={!!errors.firstName }
                     helperText={(errors?.firstName?.message ?? '') as string}
-                    onChange={() => {if(errors) {handleTyping('firstName')}}}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -69,11 +87,12 @@ const Register: React.FC = () => {
                   id="lastName"
                   label="Last Name"
                   autoComplete="family-name"
-                  {...register('lastName', { required: 'Last name is required', pattern: { value: /^[a-zA-Z]/,
-                    message: 'Last name must be letters only' }})}
+                  InputLabelProps={{
+                    sx: { "&.Mui-focused": { color: "inherit" } },
+                  }}
+                  {...register('lastName', { required: 'Last name is required' })}
                     error={!!errors.lastName }
                     helperText={(errors?.lastName?.message ?? '') as string}
-                    onChange={() => {if(errors) {handleTyping('lastName')}}}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -83,11 +102,13 @@ const Register: React.FC = () => {
                   id="email"
                   label="Email Address"
                   autoComplete="email"
+                  InputLabelProps={{
+                    sx: { "&.Mui-focused": { color: "inherit" } },
+                  }}
                   {...register('email', { required: 'Email is required', pattern: { value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
                     message: 'Invalid email format' }})}
                     error={!!errors.email }
                     helperText={(errors?.email?.message ?? '') as string}
-                    onChange={() => {if(errors) {handleTyping('email')}}}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -98,16 +119,18 @@ const Register: React.FC = () => {
                   type="password"
                   id="password"
                   autoComplete="new-password"
+                  InputLabelProps={{
+                    sx: { "&.Mui-focused": { color: "inherit" } },
+                  }}
                   {...register('password', {required: 'Password is required'})}
                     error={!!errors.password}
                     helperText={(errors?.password?.message ?? '') as string}
-                    onChange={() => {if(errors) {handleTyping('password')}}}
                 />
               </Grid>
               <Grid item xs={12}>
                 <FormControlLabel
-                  control={<Checkbox value="allowExtraEmails" color="primary" />}
-                  label="I want to receive inspiration, marketing promotions and updates via email."
+                  control={<Checkbox value="allowExtraEmails" color="default" />}
+                  label="receive updates on the latest news and updates to Farmacy Meals menus."
                 />
               </Grid>
             </Grid>
@@ -121,13 +144,14 @@ const Register: React.FC = () => {
             </Button>
             <Grid container justifyContent="flex-end">
               <Grid item>
-                <Link href="/login" variant="body2">
+                <Link href="/login" variant="body2" color='inherit'>
                   Already have an account? Sign in
                 </Link>
               </Grid>
             </Grid>
           </Box>
           {registered && <Navigate to="/" />}
+        </Box>
       </Container>
       </>
   );

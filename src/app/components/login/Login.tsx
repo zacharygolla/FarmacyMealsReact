@@ -18,28 +18,60 @@ import { Navigate } from 'react-router-dom';
 import { setUserData } from '../../slices/userSlice';
 
 const Login: React.FC = () => {
-    const dispatch = useDispatch();
-    const {register, handleSubmit, formState: { errors }, clearErrors} = useForm()
-    const [loggedIn, setLoggedIn] = useState(false);
+  const dispatch = useDispatch();
+  const [email, setEmail] = useState('');
+  const {register, handleSubmit, formState: { errors }, setError, clearErrors } = useForm()
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);     
 
-    const handleTyping = (id: string) => {
-        clearErrors(id);        
-    };   
+  useEffect(() => {
+    const rememberMeFlag = localStorage.getItem('rememberMe');
+    if (rememberMeFlag === 'true') {
+      setRememberMe(true);
+      const storedEmail = localStorage.getItem('email');
+      setEmail(storedEmail ?? '');
+    }
+  }, []);
+
+  const handleCheckboxChange = (event: { target: { checked: boolean | ((prevState: boolean) => boolean); }; }) => {
+    setRememberMe(event.target.checked);
+  };
     
-    const submitForm: SubmitHandler<FieldValues> = async (data) => {
-        const loginSubmit = () => {
-            try {
-                accountLogin(data)
-                    .subscribe(response => {
-                        dispatch(setUserData({ firstName: response.data.firstName, email: response.data.email, token: response.data.token }));
-                        setLoggedIn(true)
-                    })                
-            } catch (error) {
-                console.error('Error logging in.', error)
+  const submitForm: SubmitHandler<FieldValues> = async (data) => {
+    const loginSubmit = () => {
+      accountLogin(data)    
+        .subscribe({
+          next: response => {
+            dispatch(setUserData({ 
+              firstName: response.data.firstName, 
+              email: response.data.email,
+              token: response.data.token 
+            }));
+            setLoggedIn(true)
+            if (rememberMe) {
+              localStorage.setItem('rememberMe', 'true');
+              localStorage.setItem('email', response.data.email);
+            } else {
+              localStorage.removeItem('rememberMe');
+              localStorage.removeItem('email');
             }
-        }
-        loginSubmit();
-    };    
+          },
+          error: error => {
+            if (error.response && error.response.data.title === "Unauthorized") {
+              // Display error message in the email field              
+              setError('email', { type: 'manual', message: '' });
+              setError('password', {
+                type: 'manual',
+                message: 'Invalid Email or Password.',
+              });
+            } else {
+              console.error('Error logging in:', error);
+            }
+          }
+        })                                 
+      }
+      loginSubmit();
+    };   
 
     return (
       <>
@@ -53,32 +85,41 @@ const Login: React.FC = () => {
           <Box component="form" noValidate sx={{ mt: 1 }} onSubmit={handleSubmit(submitForm)}>
             <TextField
               margin="normal"
-              required
               fullWidth
               id="email"
+              type="email"
               label="Email Address"
-              autoComplete="email"
-              autoFocus    
-              {...register('email', { required: 'Email is required', pattern: { value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-                message: 'Invalid email format' }})}
-                error={!!errors.email }
-                helperText={(errors?.email?.message ?? '') as string}
-                onChange={() => {if(errors) {handleTyping('email')}}}
+              {...register('email', {
+                required: 'Email is required',
+                pattern: {
+                  value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+                  message: 'Invalid email format'
+                },
+                onChange: () => {clearErrors('email')}
+              })}
+              error={!!errors.email}
+              helperText={(errors?.email?.message ?? '') as string}
+              onChange={() => {clearErrors('email')}}
             />
             <TextField
               margin="normal"
-              required
-              fullWidth              
+              fullWidth
               label="Password"
               type="password"
               id="password"
-              {...register('password', {required: 'Password is required'})}
+              {...register('password', { 
+                required: 'Password is required', 
+                minLength: { 
+                  value: 8, 
+                  message: 'Password must be at least 8 characters long.' 
+                },
+                onChange: () => {clearErrors('password')}
+              })}
               error={!!errors.password}
               helperText={(errors?.password?.message ?? '') as string}
-              onChange={() => {if(errors) {handleTyping('password')}}}                          
             />
             <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
+              control={<Checkbox checked={rememberMe} onChange={handleCheckboxChange} color="primary" />}
               label="Remember me"
             />
             <Button
@@ -89,7 +130,7 @@ const Login: React.FC = () => {
             >
               Sign In
             </Button>
-            </Box>
+          </Box>
             <Grid container>
               <Grid item xs>
                 <Link href="#" variant="body2">
@@ -108,3 +149,4 @@ const Login: React.FC = () => {
     );
 }
 export default Login;
+

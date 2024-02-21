@@ -26,7 +26,8 @@ const Navbar: React.FC = () => {
             <AppBar position="static" sx={{ mb: 4 }}>
                 <Toolbar sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <Box display='flex' alignItems='center'>
-                        <Typography variant="h6" component={NavLink} to='/' sx={{ color: 'inherit', textDecoration: 'none' }}>Farmacy Meals</Typography>                    <List sx={{ display: 'flex' }}>
+                        <Typography variant="h6" component={NavLink} to='/' sx={{ color: 'inherit', textDecoration: 'none' }}>Farmacy Meals</Typography>                    
+                        <List sx={{ display: 'flex' }}>
                             {leftLinks.map((({ title, path }) => (
                                 <ListItem component={NavLink} to={path} key={path} sx={{ ...navStyles, typography: 'h6' }}>
                                     {title.toUpperCase()}
